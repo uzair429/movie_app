@@ -1,5 +1,6 @@
 // movie_api_client.dart
 import 'package:dio/dio.dart';
+import '../model/genre_model.dart';
 import '../model/movie_model.dart';
 
 class MovieApiClient {
@@ -18,6 +19,27 @@ class MovieApiClient {
     return List<Map<String, dynamic>>.from(response.data['results'])
         .map((json) => Movie.fromJson(json))
         .toList();
+  }
+
+  // Assume this function is used to fetch genre data from the API
+  Future<Map<int, String>> fetchGenreData() async {
+    final response = await dio.get('https://api.themoviedb.org/3/genre/movie/list',
+      queryParameters: {
+        'api_key': apiKey,
+      },
+    );
+    if (response.statusCode == 200) {
+      var genres = List<Map<String, dynamic>>.from(response.data['genres'])
+          .map((json) => Genre.fromJson(json))
+          .toList();
+      Map<int, String> genreMap = {};
+      for (var genre in genres) {
+        genreMap[genre.id] = genre.name;
+      }
+      return genreMap;
+    } else {
+      throw Exception('Failed to load genre data');
+    }
   }
 
   Future fetchVideo(String movieId) async {

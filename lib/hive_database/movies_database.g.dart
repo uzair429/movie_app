@@ -22,13 +22,15 @@ class MovieCacheDataAdapter extends TypeAdapter<MovieCacheData> {
       overview: fields[2] as String,
       posterPath: fields[3] as String,
       backdropPath: fields[4] as String,
+      genres: (fields[5] as List).cast<int>(),
+      releaseDate: fields[6] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, MovieCacheData obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +40,11 @@ class MovieCacheDataAdapter extends TypeAdapter<MovieCacheData> {
       ..writeByte(3)
       ..write(obj.posterPath)
       ..writeByte(4)
-      ..write(obj.backdropPath);
+      ..write(obj.backdropPath)
+      ..writeByte(5)
+      ..write(obj.genres)
+      ..writeByte(6)
+      ..write(obj.releaseDate);
   }
 
   @override

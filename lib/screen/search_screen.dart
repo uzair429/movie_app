@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/api/movie_api.dart';
 import 'package:movies_app/screen/detail_screen.dart';
+import 'package:provider/provider.dart';
 import '../constants.dart';
+import '../controller/movie_provider.dart';
 import '../model/movie_model.dart';
 
 class MovieSearchScreen extends StatefulWidget {
@@ -69,8 +71,11 @@ class _MovieSearchScreenState extends State<MovieSearchScreen> {
                   itemBuilder: (context, index) {
                     final movie = _searchResults[index];
                     return GestureDetector(
-                      onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                        return DetailScreen(movie: movie);
+                      onTap: (){
+                        final  provider = Provider.of<MovieProvider>(context,listen:false);
+                        provider.selectMovie(movie);
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                        return DetailScreen();
                       }));
                       },
                       child: Card(
@@ -96,8 +101,7 @@ class _MovieSearchScreenState extends State<MovieSearchScreen> {
                                 ),
                               ),
                           ),
-                            SizedBox(
-                              width: size.width / 2,
+                            Expanded(
                               child: Text(
                                 movie.title,
                                 overflow: TextOverflow.clip,
@@ -109,7 +113,10 @@ class _MovieSearchScreenState extends State<MovieSearchScreen> {
                                 ),
                               ),
                             ),
-                            Icon(Icons.more_vert)
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(Icons.more_horiz,color: AppColors.borderColor,),
+                            )
                           ],
                         )
                       ),

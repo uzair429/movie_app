@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
 part 'movies_database.g.dart';
-
+//
 @HiveType(typeId: 0)
 class MovieCacheData extends HiveObject {
   @HiveField(0)
@@ -20,12 +20,20 @@ class MovieCacheData extends HiveObject {
   @HiveField(4)
   String backdropPath;
 
+  @HiveField(5)
+  List<int> genres;
+
+  @HiveField(6)
+  String releaseDate;
+
   MovieCacheData({
     required this.id,
     required this.title,
     required this.overview,
     required this.posterPath,
     required this.backdropPath,
+    required this.genres,
+    required this.releaseDate,
   });
 }
 

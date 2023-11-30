@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/custom_widgets/booking_widgets/seat_selection_widget.dart';
 
 import '../../constants.dart';
 
@@ -27,36 +28,17 @@ class _TimeSelectorState extends State<TimeSelector> {
         ),
         borderRadius: BorderRadius.circular(12.0),
       ),
-      child: Column(
+      child:
+      // ,
+      // Container(
+      //   width: 300,
+      //     height: 200,
+      //     child: SeatSelector()),
+      Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.chair_alt,size: 200, color: active ? AppColors.borderColor : Colors.black,)
-          // RichText(
-          //     text: TextSpan(
-          //         text: time,
-          //         style: TextStyle(
-          //           fontSize: 20,
-          //           fontWeight: FontWeight.w600,
-          //           color: active ? Colors.black : Colors.white,
-          //         ),
-          //         children: <TextSpan>[
-          //       TextSpan(
-          //           text: ' PM',
-          //           style: TextStyle(
-          //             fontSize: 14,
-          //             fontWeight: FontWeight.w600,
-          //             color: active ? Colors.black : Colors.white,
-          //           ))
-          //     ])),
-          // Text(
-          //   "from \$$price",
-          //   style: TextStyle(
-          //     fontSize: 14,
-          //     fontWeight: FontWeight.w600,
-          //     color: Colors.grey,
-          //   ),
-          // )
         ],
       ),
     );
@@ -67,7 +49,7 @@ class _TimeSelectorState extends State<TimeSelector> {
     Size size = MediaQuery.of(context).size;
 
     return Expanded(
-      flex: 17,
+      // flex: 17,
       child: Container(
         margin: EdgeInsets.symmetric(vertical: size.height * .2),
         child: ListView.builder(

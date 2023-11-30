@@ -1,18 +1,29 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:movies_app/screen/booking_screen.dart';
+import 'package:movies_app/controller/movie_provider.dart';
+import 'package:movies_app/custom_widgets/custom_shadow_widget.dart';
+import 'package:movies_app/custom_widgets/detail_widgets/genre_widget.dart';
+import 'package:movies_app/custom_widgets/detail_widgets/overview_widget.dart';
 import 'package:movies_app/screen/videoScreen.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
+import '../custom_widgets/detail_widgets/network_image_widget.dart';
 
 class DetailScreen extends StatelessWidget {
-  final movie;
-
-  const DetailScreen({Key? key, required this.movie}) : super(key: key);
+  const DetailScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          title: arrowButtonAndText(context)),
       body: OrientationBuilder(builder: (context, orientation) {
         if (orientation == Orientation.portrait) {
           return _buildPortraitLayout(context);
@@ -28,14 +39,39 @@ class DetailScreen extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(children: [
         Container(
-            color:  AppColors.backgroundColor,
+            color: AppColors.backgroundColor,
             height: size.height * .75,
             child: Stack(
               children: [
-                SizedBox.expand(
-                  child: networkImage(),
+                const SizedBox.expand(
+                  child: NetworkImageWidget(),
                 ),
-                arrowButtonAndText(context),
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: 0.3,
+                    // Adjust the height of the overlay
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(16),
+                        bottomRight: Radius.circular(16),
+                      ),
+                      gradient: LinearGradient(
+                        end: Alignment.bottomCenter,
+                        begin: Alignment.topCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.8),
+                          Colors.transparent
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                CustomShadowWidget(
+                  isDetail: true,
+                ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Column(
@@ -46,7 +82,7 @@ class DetailScreen extends StatelessWidget {
                         width: 230,
                         child: ElevatedButton(
                             onPressed: () {
-                              ticketButton(context);
+                              // ticketButton(context);
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.borderColor,
@@ -69,8 +105,8 @@ class DetailScreen extends StatelessWidget {
                               videoButton(context);
                             },
                             style: ElevatedButton.styleFrom(
-                                side:
-                                    const BorderSide(color: AppColors.borderColor),
+                                side: const BorderSide(
+                                    color: AppColors.borderColor),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12))),
                             icon: const Icon(
@@ -90,28 +126,41 @@ class DetailScreen extends StatelessWidget {
                 )
               ],
             )),
-        Row(
-          children: [
-            Padding(padding: const EdgeInsets.all(18.0), child: overViewText()),
-          ],
-        ),
         Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 22.0),
-            child: detailOverViewText())
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 14),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            genreText(),
+            const GenreWidget(),
+            overViewText(),
+            const OverviewWidget(),
+          ]),
+        )
       ]),
     );
   }
 
   _buildLandscapeLayout(context) {
+    final provider = Provider.of<MovieProvider>(context, listen: false);
     final size = MediaQuery.of(context).size;
     return Row(children: [
       Expanded(
         child: Container(
-            color:  AppColors.backgroundColor,
+            color: AppColors.backgroundColor,
             child: Stack(
               children: [
-                networkImage(),
-                arrowButtonAndText(context),
+                CachedNetworkImage(
+                  imageUrl: provider.selectedMovie!.posterPath,
+                  width: double.infinity,
+                  fit: BoxFit.fill,
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.error,
+                    size: 150,
+                  ),
+                ),
+                // arrowButtonAndText(context),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Row(
@@ -122,7 +171,7 @@ class DetailScreen extends StatelessWidget {
                         width: size.width * .2,
                         child: ElevatedButton(
                             onPressed: () {
-                              ticketButton(context);
+                              // ticketButton(context);
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.borderColor,
@@ -137,7 +186,7 @@ class DetailScreen extends StatelessWidget {
                             )),
                       ),
                       Container(
-                        margin: EdgeInsets.all(12),
+                        margin: const EdgeInsets.all(12),
                         height: 50,
                         width: size.width * .25,
                         child: OutlinedButton.icon(
@@ -145,8 +194,8 @@ class DetailScreen extends StatelessWidget {
                               videoButton(context);
                             },
                             style: ElevatedButton.styleFrom(
-                                side:
-                                    const BorderSide(color: AppColors.borderColor),
+                                side: const BorderSide(
+                                    color: AppColors.borderColor),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12))),
                             icon: const Icon(
@@ -163,57 +212,39 @@ class DetailScreen extends StatelessWidget {
                       )
                     ],
                   ),
-                )
+                ),
               ],
             )),
       ),
       Expanded(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(22.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  overViewText(),
-                ],
-              ),
-            ),
-            Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 22.0),
-                child: detailOverViewText()),
+            genreText(),
+            const GenreWidget(),
+            overViewText(),
+            const OverviewWidget()
           ],
         ),
       )
     ]);
   }
 
-  ticketButton(context){
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) {
-      return BookingScreen(
-        movieName: movie.title,
-      );
-    }));
-  }
-  videoButton(context){
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) {
-      return VideoPlayerScreen(
-        movieId: movie.id,
-      );
-    }));
-  }
+  // ticketButton(context) {
+  //   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+  //     return BookingScreen(
+  //       movieName: movie.title,
+  //     );
+  //   }));
+  // }
 
-  networkImage(){
-    return
-      CachedNetworkImage(
-        imageUrl: movie.posterPath,
-        fit: BoxFit.cover,
-        placeholder: (context, url) =>
-            const Center(child: CircularProgressIndicator()),
-        errorWidget: (context, url, error) => Icon(Icons.error,size: 150,),
+  videoButton(context) {
+    final provider = Provider.of<MovieProvider>(context, listen: false);
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return VideoPlayerScreen(
+        movieId: provider.selectedMovie!.id,
       );
+    }));
   }
 
   arrowButtonAndText(context) {
@@ -245,21 +276,30 @@ class DetailScreen extends StatelessWidget {
   }
 
   overViewText() {
-    return const Text(
-      'Overview',
-      style: TextStyle(
-          fontSize: 18,
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Poppins'),
+    return const Padding(
+      padding: EdgeInsets.all(18.0),
+      child: Text(
+        'Overview',
+        style: TextStyle(
+            fontSize: 18,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Poppins'),
+      ),
     );
   }
 
-  detailOverViewText() {
-    return Text(
-      movie.overview,
-      style: const TextStyle(
-          fontSize: 12, color: Colors.grey, fontFamily: 'Poppins'),
+  genreText() {
+    return const Padding(
+      padding: EdgeInsets.all(18.0),
+      child: Text(
+        'Genre',
+        style: TextStyle(
+            fontSize: 18,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Poppins'),
+      ),
     );
   }
 }
