@@ -2,15 +2,18 @@
 
 A new Flutter project.
 
-## Getting Started
+Project Explanations
+1.	API Handling:
+•	Used the Dio package for making API requests in the MovieApiClient class.
+2.	Data Model:
+•	Defined a Movie class in the model directory to represent movie data.
+3.	Local Data Storage:
+•	Implemented local data caching with Hive in the hive_database directory.
+•	Created the MovieCacheData class extending HiveObject with Hive annotations.
+4.	Screens:
+•	Developed screens in the screens directory, e.g., MyHomeScreen , DetailScreen, videoScreen,  and BookingScreen.
+•	MyHomePage fetches and caches movie data, displaying it with a clean UI.
+•	VideoPlayerScreen plays YouTube videos with landscape mode support.
+5.	Package Integration:
+•	Integrated packages like cached_network_image for image caching, orientation for handling orientation, and youtube_player_flutter for YouTube video playback.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
